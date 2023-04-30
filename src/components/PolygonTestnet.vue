@@ -246,44 +246,6 @@ export default {
     isAssetsView: function () {
       return this.currentView === "assets";
     },
-    /*    Deposit: async function deposit() {
-      // Check if Metamask is installed
-      if (typeof window.ethereum === 'undefined') {
-        alert('Please install Metamask to use this feature.');
-        return;
-      }
-
-      // Set the contract address and abi
-      const contractAddress = '0xbc2810BEfF2D4A0b9A792Bb1A7732aEA287D6bB0';
-      const abi = [
-        {
-          "inputs": [],
-          "name": "deposit",
-          "outputs": [],
-          "stateMutability": "payable",
-          "type": "function"
-        }
-      ];
-
-      // Create an instance of the contract
-      const contract = new web3js.eth.Contract(abi, contractAddress);
-
-      // Call the deposit function with the appropriate amount of MATIC
-      const depositAmount = web3js.utils.toWei('0.01', 'ether');
-      const accounts = await web3.eth.getAccounts();
-
-      console.log(depositAmount)
-      console.log(contract)
-      try {
-        const result = await contract.methods.deposit().send({value: depositAmount, from: accounts[0]});
-        console.log(result);
-        alert('Deposit successful!');
-      } catch (error) {
-        console.error(error);
-        alert('Deposit failed.');
-        alert(error)
-      }
-    },*/
     Deposit: async function () {
       try {
         // Set the contract address and abi
@@ -300,21 +262,15 @@ export default {
         const contract = new web3js.eth.Contract(contractAbi, contractAddress);
         console.log("contract = " + contract)
         const depositAmount = web3js.utils.toWei('0.01', 'ether');
-        console.log("depositAmount = " + depositAmount)
+        console.log("this.activeAccount = " + this.activeAccount)
 
-        // Check if Metamask is connected and has at least one account available
-        if (window.ethereum && window.ethereum.selectedAddress) {
           // Call the deposit function and wait for the transaction to be confirmed
           const result = await contract.methods.deposit().send({
             value: depositAmount,
-            from: window.ethereum.selectedAddress,
+            from: this.activeAccount
           });
 
           console.log(result);
-        } else {
-          alert('Please connect to Metamask and unlock your account to use this feature.');
-          return;
-        }
       } catch (error) {
         console.error(error);
       }
