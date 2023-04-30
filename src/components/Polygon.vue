@@ -1,4 +1,4 @@
-<!--./src/components/SmartMask.vue -->
+<!--./src/components/Polygon.vue -->
 
 <template>
   <div class="section text-center m-4">
@@ -9,8 +9,8 @@
     <div v-if="hasActiveAccount()">
       <div v-if="isAssetsView()">
         <p class="text-lg mt-4 mb-2 font-semibold">
-          <img class="mx-auto mb-2 w-16" src="/img/bch.svg" />
-          {{ BCHBalance(balance) }} BCH
+          <img class="mx-auto mb-2 w-16" src="/img/matic.png"  alt=""/>
+          {{ MATICBalance(balance) }} MATIC
         </p>
         <button
           @click="showWithdrawal()"
@@ -28,83 +28,12 @@
         >
           Send
         </button>
-        <button
-          @click="showDeposit()"
-          class="
-            m-1
-            bg-blue-500
-            hover:bg-blue-600
-            active:bg-blue-700
-            text-white
-            font-bold
-            py-2
-            px-4
-            rounded
-          "
-        >
-          Receive
-        </button>
-        <h1 v-if="nftBalances.length > 0" class="mb-4 mt-8 font-semibold">
-          - NFT Assets -
-        </h1>
-        <div
-          class="px-4 m-auto max-w-xs flex flex-nowrap items-center"
-          v-for="asset in nftBalances"
-          v-bind:key="asset.address"
-        >
-          <div class="flex-none">
-            <img class="m-2 w-8" :src="assetIcon(asset.address)" />
-          </div>
-          <div
-            class="m-2 text-left overflow-hidden overflow-ellipsis flex-grow"
-          >
-            <a target="_blank" :href="assetHref(asset)">{{ assetBalanceFormatter(asset.balance) }} {{ asset.balance > 1 ? asset.name + 's' : asset.name }}</a>
-          </div>
-        </div>
-        <h1 v-if="tokenBalances.length > 0" class="mb-4 mt-8 font-semibold">
-          - Token Assets -
-        </h1>
-        <div
-          class="px-4 m-auto max-w-xs flex flex-nowrap items-center"
-          v-for="asset in tokenBalances"
-          v-bind:key="asset.address"
-        >
-          <div class="flex-none">
-            <img class="m-2 w-8" :src="assetIcon(asset.address)" />
-          </div>
-          <div
-            class="m-2 text-left overflow-hidden overflow-ellipsis flex-grow"
-          >
-            {{ assetBalanceFormatter(asset.balance) }} {{ asset.symbol }}
-          </div>
-        </div>
-      </div>
-      <div v-if="isDepositView()">
-        <Deposit
-          :activeAccount="activeAccount"
-          :copySupported="copySupported()"
-        />
-        <button
-          @click="goHome()"
-          class="
-            m-1
-            bg-blue-500
-            hover:bg-blue-600
-            active:bg-blue-700
-            text-white
-            font-bold
-            py-2
-            px-4
-            rounded
-          "
-        >
-          Close
-        </button>
+
       </div>
       <div v-if="isWithdrawaltView()">
         <div class="max-w-xs m-auto">
           <div class="field-group">
-            <img class="w-16 block mb-2 mx-auto" :src="assetImage()" />
+            <img class="w-16 block mb-2 mx-auto" src="/img/matic.png"  alt=""/>
             <select
               v-model="sendContract"
               class="
@@ -118,14 +47,7 @@
                 bg-white
               "
             >
-              <option value="">BCH - {{ balance }}</option>
-              <option
-                v-for="asset in tokenBalances"
-                v-bind:value="asset.address"
-                v-bind:key="asset.address"
-              >
-                {{ asset.symbol }} - {{ asset.balance }}
-              </option>
+              <option value="">MATIC - {{ balance }}</option>
             </select>
             <label class="field-label block mb-1" for="recipient"
               >- Recipient -</label
@@ -139,36 +61,6 @@
                   name="recipient"
                   id="recipient"
                 />
-              </div>
-              <div>
-                <button
-                  @click="showScan()"
-                  class="
-                    bg-blue-500
-                    hover:bg-blue-600
-                    active:bg-blue-700
-                    text-white
-                    font-bold
-                    py-2
-                    px-3
-                    rounded-r
-                  "
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-                    />
-                  </svg>
-                </button>
               </div>
             </div>
           </div>
@@ -256,72 +148,22 @@
           </button>
         </div>
       </div>
-      <div v-if="isScanView()">
-        <QRScan :qrbox="200" :fps="10" :aspectRatio="1" @result="onScan" />
-        <button
-          @click="showWithdrawal()"
-          class="
-            m-2
-            bg-blue-500
-            hover:bg-blue-600
-            active:bg-blue-700
-            text-white
-            font-bold
-            py-2
-            px-4
-            rounded
-          "
-        >
-          Close
-        </button>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Deposit from "./Deposit.vue";
-import QRScan from "./QRScan.vue";
 import Web3 from "web3/dist/web3.min.js";
 import Decimal from "decimal.js";
 import { setIntervalAsync } from "set-interval-async/fixed";
-import { clearIntervalAsync } from "set-interval-async";
-import { assetList } from "../assetList.js";
-import { each, map, reverse } from "lodash";
 import { BigNumber } from "bignumber.js";
 
-const web3js = new Web3("wss://smartbch-wss.greyh.at");
+const web3js = new Web3("https://polygon-rpc.com/");
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Debugging helpers.
 window.web3js = web3js;
 window.Web3NoMeta = Web3;
-window.assetList = assetList;
-
-// For SEP20 transfers.
-const minABI = [
-  {
-    constant: false,
-    inputs: [
-      {
-        name: "_to",
-        type: "address",
-      },
-      {
-        name: "_value",
-        type: "uint256",
-      },
-    ],
-    name: "transfer",
-    outputs: [
-      {
-        name: "",
-        type: "bool",
-      },
-    ],
-    type: "function",
-  },
-];
 
 export default {
   name: "SmartMask",
@@ -329,7 +171,6 @@ export default {
     return {
       accounts: [],
       activeAccount: "",
-      assetList: assetList,
       attemptedRegistration: false,
       balance: new BigNumber(0),
       bindingRetries: 0,
@@ -345,23 +186,13 @@ export default {
       sendTo: "",
       stopRequests: false,
       timer: null,
-      tokenBalances: [],
-      nftBalances: [],
     };
   },
   components: {
-    Deposit,
-    QRScan,
-  },
-  created: async function () {
-    this.noCopy = !navigator.clipboard;
   },
   mounted: async function () {
-    this.checkState();
+    await this.checkState();
     this.timer = setIntervalAsync(this.checkState, 5000);
-  },
-  unmounted: function () {
-    this.cancelAutoUpdate();
   },
   methods: {
     onScan: function (result) {
@@ -397,98 +228,8 @@ export default {
 
       this.bindingsAdded = true;
     },
-    assetImage: function () {
-      if (this.sendingBCH()) {
-        return "/img/bch.svg";
-      } else {
-        return "/img/assets/" + this.sendContract + ".png";
-      }
-    },
-    sendingBCH: function () {
+    sendingMATIC: function () {
       return this.sendContract === "";
-    },
-    getTokenBalances: async function () {
-      try {
-        const resp = await this.callMultiple(
-          map(this.assetList, (_, tokenAddress) => {
-            return {
-              to: tokenAddress,
-              data:
-                Web3.utils.sha3("balanceOf(address)").slice(0, 10) +
-                "000000000000000000000000" +
-                Web3.utils.stripHexPrefix(this.activeAccount),
-              returnType: "uint256",
-            };
-          })
-        );
-
-        var newBalances = [];
-
-        each(resp, (_, i) => {
-          const k = Object.keys(this.assetList)[i];
-          const asset = this.assetList[k];
-          if (asset.symbol === "LAW") {
-            // LAW contract returns a long and invalid response.
-            // Must be truncated to get the right value.
-            asset.balance = this.convertValue(
-              resp[i].substring(0, 66),
-              asset.decimals
-            );
-          } else {
-            asset.balance = this.convertValue(resp[i], asset.decimals);
-          }
-          newBalances.push(asset);
-        });
-
-        return newBalances;
-      } catch (error) {
-        return null;
-      }
-    },
-    callMultiple: function (transactionConfigs) {
-      const batch = new web3js.eth.BatchRequest();
-      const promises = transactionConfigs.map((transactionConfig) => {
-        return new Promise((res, rej) => {
-          const req = web3js.eth.call.request(
-            transactionConfig,
-            (err, data) => {
-              if (err) {
-                rej(err);
-              } else {
-                res(data);
-              }
-            }
-          );
-          batch.add(req);
-        });
-      });
-
-      batch.execute();
-      return Promise.all(promises);
-    },
-    convertValue: function (data, decimals) {
-      const convertedValue = new BigNumber(
-        new BigNumber(data)
-          .dividedBy(new BigNumber(`1e${decimals}`))
-          .toFixed(decimals)
-      );
-      return convertedValue.toString();
-    },
-    assetIcon: function (address) {
-      return "/img/assets/" + address + ".png";
-    },
-    assetHref: function (asset) {
-      if (asset.symbol == "GAC") {
-        return "https://apes.cash/my-collection"
-      }
-
-      return "https://oasis.cash/wallet/" + asset.address
-    },
-    copySupported: function () {
-      return this.noCopy !== true;
-    },
-    isDepositView: function () {
-      return this.currentView === "deposit";
     },
     isWithdrawaltView: function () {
       return this.currentView === "withdrawal";
@@ -496,28 +237,15 @@ export default {
     isAssetsView: function () {
       return this.currentView === "assets";
     },
-    isScanView: function () {
-      return this.currentView === "scan";
-    },
     showWithdrawal: function () {
       this.resetNotices();
 
       this.currentView = "withdrawal";
     },
-    showDeposit: function () {
-      this.resetNotices();
-
-      this.currentView = "deposit";
-    },
     showAssets: function () {
       this.resetNotices();
 
       this.currentView = "assets";
-    },
-    showScan: function () {
-      this.resetNotices();
-
-      this.currentView = "scan";
     },
     resetNotices: function () {
       this.errorMessage = "";
@@ -526,46 +254,15 @@ export default {
     goHome: function () {
       this.showAssets();
     },
-    assetBalanceFormatter: function (bal) {
-      return new BigNumber(new BigNumber(bal).toFixed(10)).toString();
-    },
     sendAction: function () {
       if (this.validateSend()) {
         this.resetNotices();
-        if (this.sendingBCH()) {
-          this.sendBCH();
-        } else {
-          this.sendAsset();
+        if (this.sendingMATIC()) {
+          this.sendMATIC();
         }
       }
     },
-    sendAsset: function () {
-      const asset = this.assetList[this.sendContract];
-      const contract = new web3js.eth.Contract(minABI, this.sendContract);
-      const gasPrice = web3js.utils.toWei("0.00000000105", "ether");
-      const decimals = web3js.utils.toBN(asset.decimals);
-      const amount = new BigNumber(this.sendAmount);
-      const value = amount.multipliedBy(web3js.utils.toBN(10).pow(decimals));
-
-      window.ethereum
-        .request({
-          method: "eth_sendTransaction",
-          params: [
-            {
-              from: this.activeAccount,
-              to: web3js.utils.toChecksumAddress(this.sendContract),
-              value: web3js.utils.toHex(0),
-              gasPrice: web3js.utils.toHex(gasPrice),
-              data: contract.methods
-                .transfer(this.sendTo, web3js.utils.toBN(value))
-                .encodeABI(),
-            },
-          ],
-        })
-        .then((txHash) => console.log(txHash))
-        .catch((error) => console.log(error));
-    },
-    sendBCH: function () {
+    sendMATIC: function () {
       let value = web3js.utils.toWei(this.sendAmount.toString(), "ether");
       const gasPrice = web3js.utils.toWei("0.00000000105", "ether");
       const gas = "21000";
@@ -606,15 +303,7 @@ export default {
         return false;
       }
 
-      if (this.sendingBCH() && this.sendAmount > this.balance) {
-        this.setError("Invalid amount");
-        return false;
-      }
-
-      if (
-        !this.sendingBCH() &&
-        this.sendAmount > this.assetList[this.sendContract].balance
-      ) {
+      if (this.sendingMATIC() && this.sendAmount > this.balance) {
         this.setError("Invalid amount");
         return false;
       }
@@ -622,51 +311,29 @@ export default {
       return true;
     },
     maxSend: function () {
-      if (this.sendingBCH()) {
+      if (this.sendingMATIC()) {
         this.sendAmount = this.balance;
-      } else {
-        this.sendAmount = this.assetList[this.sendContract].balance;
       }
-    },
-    setNotice: function (text) {
-      this.noticeMessage = text;
-      this.noticeDate = Date.now();
     },
     setError: function (text) {
       this.errorMessage = text;
       this.errorDate = Date.now();
     },
-    BCHBalance: function (bal) {
+    MATICBalance: function (bal) {
       return new BigNumber(bal.toFixed(8)).toString();
-    },
-    goToSmartScan: function () {
-      location.href = this.smartScanURI(this.activeAccount);
-    },
-    paste: async function () {
-      if (this.copySupported()) {
-        this.sendTo = await navigator.clipboard.readText();
-      } else {
-        console.log("Clipboard not available");
-      }
     },
     resetConnection: function () {
       this.connected = false;
       this.pendingConnection = false;
       this.stopRequests = false;
     },
-    cancelAutoUpdate: function () {
-      clearIntervalAsync(this.timer);
-    },
     backendAvailable: function () {
       return typeof window.ethereum !== "undefined";
     },
     validNetwork: function () {
-      return window.ethereum.chainId === "0x2710";
+      return window.ethereum.chainId === "0x89";
     },
-    hasAccounts: function () {
-      return this.accounts.length > 0;
-    },
-    hasActiveAccount: function () {
+      hasActiveAccount: function () {
       return this.activeAccount !== "";
     },
     hasError: function () {
@@ -680,49 +347,8 @@ export default {
         this.balance = new Decimal(
           web3js.utils.fromWei(await web3js.eth.getBalance(this.activeAccount))
         );
-
-        var pendingBalances = [];
-        var nftCollectionCounts = [];
-
-        each(await this.getTokenBalances(), (v) => {
-          if (new BigNumber(v.balance).gt(0)) {
-            if (v.type !== "NFT") {
-              pendingBalances.push(v);
-            } else {
-              nftCollectionCounts.push(v);
-            }
-          }
-        });
-
-        this.tokenBalances = reverse(
-          pendingBalances.sort(function (a, b) {
-            if (a.symbol < b.symbol) {
-              return 1;
-            }
-            if (a.symbol > b.symbol) {
-              return -1;
-            }
-            return 0;
-          })
-        );
-
-        this.nftBalances = reverse(
-          nftCollectionCounts.sort(function (a, b) {
-            if (a.symbol < b.symbol) {
-              return 1;
-            }
-            if (a.symbol > b.symbol) {
-              return -1;
-            }
-            return 0;
-          })
-        );
-
         console.log("Refreshing balance for " + this.activeAccount);
       }
-    },
-    smartScanURI: function (a) {
-      return "https://smartscan.cash/address/" + a;
     },
     unavailable: function () {
       return !(this.backendAvailable() && this.validNetwork());
@@ -793,28 +419,27 @@ export default {
         }
       }
     },
-    smartBCHProvider: function () {
+    smartPolygonProvider: function () {
       return {
-        chainId: "0x2710",
+        chainId: "0x89",
         rpcUrls: [
-          "https://smartbch.greyh.at",
-          "https://smartbch.fountainhead.cash/mainnet",
+          "https://polygon-rpc.com/",
         ],
-        chainName: "smartBCH",
+        chainName: "Polygon Mainnet",
         nativeCurrency: {
-          name: "Bitcoin Cash",
-          symbol: "BCH",
+          name: "Polygon",
+          symbol: "MATIC",
           decimals: 18,
         },
-        blockExplorerUrls: ["https://smartscan.cash"],
-        iconUrls: ["https://smartmask.cash/img/smartbch_logo.png"],
+        blockExplorerUrls: ["https://polygonscan.com/"],
+        iconUrls: ["https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912"],
       };
     },
     attemptMetaMaskProviderRegistration: async function () {
       try {
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x2710" }],
+          params: [{ chainId: "0x89" }],
         });
         return true;
       } catch (switchError) {
@@ -823,7 +448,7 @@ export default {
           try {
             await window.ethereum.request({
               method: "wallet_addEthereumChain",
-              params: [this.smartBCHProvider()],
+              params: [this.smartPolygonProvider()],
             });
 
             return true;
@@ -853,7 +478,7 @@ export default {
         if (!this.backendAvailable()) {
           this.setError("Please install MetaMask to get started!")
         } else {
-          this.setError("Please login to MetaMask and connect to the smartBCH network!");
+          this.setError("Please login to MetaMask and connect to the Polygon network!");
         }
 
         if (this.bindingRetries < 15) {
@@ -877,8 +502,6 @@ export default {
       this.sendContract = "";
       this.sendTo = "";
       this.stopRequests = false;
-      this.tokenBalances = {};
-      this.nftBalances = {};
     },
   },
 };

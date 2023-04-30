@@ -1,6 +1,6 @@
 {
-  "name": "smartmask",
-  "version": "0.2.0",
+  "name": "zeus",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,6 @@
     "buffer": "^6.0.3",
     "decimal.js": "^10.3.1",
     "lodash": "^4.17.21",
-    "qrcode.vue": "^3.3.2",
     "set-interval-async": "^2.0.3",
     "vue": "^3.2.6",
     "vue-router": "^4.0.11",
@@ -27,9 +26,5 @@
     "postcss": "^8.3.6",
     "tailwindcss": "^2.2.15",
     "vite": "^2.5.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zquestz/smartmask"
   }
 }

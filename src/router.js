@@ -1,24 +1,19 @@
 /* ./src/router.css */
 
 import { createRouter, createWebHistory } from "vue-router";
-import About from "./components/About.vue";
-import Community from "./components/Community.vue";
-import SmartMask from "./components/SmartMask.vue";
+import Polygon from "./components/Polygon.vue";
+import PolygonTestnet from "./components/PolygonTestnet.vue";
 
 export default createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: "/",
-      component: SmartMask,
+      component: Polygon,
     },
     {
-      path: "/community",
-      component: Community,
-    },
-    {
-      path: "/about",
-      component: About,
+      path: "/polygon_testnet",
+      component: PolygonTestnet,
     },
   ],
 });

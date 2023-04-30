@@ -7,17 +7,12 @@
         <ul class="flex flex-wrap items-center justify-center text-base">
           <li class="mx-3 text-sm font-semibold hover:text-blue-600 text-white">
             <router-link to="/" active-class="text-blue-500"
-              >Wallet</router-link
+              >Polygon</router-link
             >
           </li>
           <li class="mx-3 text-sm font-semibold hover:text-blue-600 text-white">
-            <router-link to="community" active-class="text-blue-500"
-              >Community</router-link
-            >
-          </li>
-          <li class="mx-3 text-sm font-semibold hover:text-blue-600 text-white">
-            <router-link to="about" active-class="text-blue-500"
-              >About</router-link
+            <router-link to="/polygon_testnet" active-class="text-blue-500"
+            >Polygon Testnet</router-link
             >
           </li>
         </ul>
