@@ -304,23 +304,10 @@ export default {
 
         // Check if Metamask is connected and has at least one account available
         if (window.ethereum && window.ethereum.selectedAddress) {
-          // Get the current account
-          const accounts = await ethereum.request({method: 'eth_accounts'});
-          console.log("accounts = " + accounts)
-
-          const currentAccount = accounts[0];
-          console.log("currentAccount = " + currentAccount)
-          // Check that the current account is valid
-          if (!currentAccount) {
-            alert('Please unlock your Metamask account to use this feature.');
-            return;
-          }
           // Call the deposit function and wait for the transaction to be confirmed
           const result = await contract.methods.deposit().send({
             value: depositAmount,
-            from: currentAccount,
-            gas: 200000,
-            gasPrice: 10000000000 // 10 gwei
+            from: window.ethereum.selectedAddress,
           });
 
           console.log(result);
