@@ -287,7 +287,7 @@ export default {
     Deposit: async function () {
       try {
         // Set the contract address and abi
-        const contractAddress = '0xbc2810BEfF2D4A0b9A792Bb1A7732aEA287D6bB0';
+        const contractAddress = '0x9050db79f29D806fF0594bE04b68B896faF66d4c';
         const contractAbi = [
           {
             "inputs": [],
